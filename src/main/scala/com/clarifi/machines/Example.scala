@@ -6,7 +6,7 @@ import Scalaz._
 
 import java.io._
 
-object Example {
+object Example extends SafeApp {
 
   import Machine.ProcessCategory._
   import Plan._
@@ -51,5 +51,10 @@ object Example {
     getFileLines(new File(fileName),
       (id split words) outmap (_.fold(_ => (1, 0), _ => (0, 1)))) execute
 
+  override def run(args: ImmutableArray[String]): IO[Unit] = {
+    val f = args(0)
+    val c = lineWordCount(f)
+    c flatMap (q => IO.putStrLn(q.toString))
+  }
 }
 
